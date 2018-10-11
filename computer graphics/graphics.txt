@@ -1,0 +1,812 @@
+Q1. Implement digital differential algorithm for line drawing.
+Answer
+
+#include<iostream>
+#include<graphics.h>
+using namespace std;
+int main()
+{ int x0,y0,x1,y1,dx,dy,x,y,steps,x_incre,y_incre;
+  cout<<"Enter co-ordinates of first point: ";
+  cin>>x0>>y0;
+
+  cout<<"Enter co-ordinates of second point: ";
+  cin>>x1>>y1;
+
+  int gd = DETECT, gm;
+  initgraph(&gd, &gm, NULL);
+
+  dx=(x1-x0);
+  dy=(y1-y0);
+  if(abs(dx)>abs(dy))
+  steps=abs(dx);
+  else
+  steps=abs(dy);
+
+  x_incre=dx/steps;
+  y_incre=dy/steps;
+  x=x0;
+  y=y0;
+  putpixel(round(x),round(y),5);
+
+  for(int i=0;i<steps;i++)
+  {
+    x+=x_incre;
+    y+=y_incre;
+    putpixel(round(x),round(y),5);
+    delay(50);
+  }
+
+  delay(10000);
+}
+
+
+Q2. Implement Bresenham algorithm for line drawing.
+Answer
+
+/*This program is for lines of slopes greater than and less than one. */
+#include<iostream>
+#include<graphics.h>
+#include<bits/stdc++.h>
+using namespace std;
+
+void drawline(int x0, int y0, int x1, int y1)
+{
+    int dx, dy, p, x, y;
+
+    dx=abs(x1-x0);
+    dy=abs(y1-y0);
+
+    x=x0;
+    y=y0;
+    float slope = dy/dx;
+    if(slope>1)
+    { //swap x0,y0
+      int temp =x0;
+      x0=y0;
+      y0=temp;
+      //swap x1,y1
+      temp=x1;
+      x1=y1;
+      y1=temp;
+    }
+
+    p=2*dy-dx;
+
+
+    for(int k=1;k<=dx;k++)
+    {
+      if(p<0)
+      {
+        if(x<x1)
+        x=x+1;
+        else
+        x-=1;
+        p+=2*dy;
+      }
+      else
+      {
+        if(y<y1)
+        y+=1;
+        else
+        y-=1;
+        if(x<x1)
+        x+=1;
+        else
+        x-=1;
+        p+=2*(dy-dx);
+
+      }
+
+      if(slope>1)
+      putpixel(y,x,7);
+      else
+      putpixel(x,y,7);
+      delay(50);
+    }
+}
+
+int main()
+{
+    int gdriver=DETECT, gmode;
+    int  x0, y0, x1, y1;
+
+   cout<<"Enter co-ordinates of first point: ";
+   cin>>x0>>y0;
+
+   cout<<"Enter co-ordinates of second point: ";
+   cin>>x1>>y1;
+
+    initgraph(&gdriver, &gmode,NULL);
+    drawline(x0, y0, x1, y1);
+    delay(10000);
+
+    return 0;
+}
+
+
+Q3. Implement Bresenham Algorithm for drawing circle.
+Answer
+
+
+
+#include <iostream>
+#include <graphics.h>
+#include<math.h>
+using namespace std;
+void drawCircle(int xc, int yc, int x, int y)
+{
+
+    putpixel(xc+x, yc+y, RED);
+    putpixel(xc-x, yc+y, RED);
+    putpixel(xc+x, yc-y, RED);
+    putpixel(xc-x, yc-y, RED);
+    putpixel(xc+y, yc+x, RED);
+    putpixel(xc-y, yc+x, RED);
+    putpixel(xc+y, yc-x, RED);
+    putpixel(xc-y, yc-x, RED);
+
+
+}
+
+void circleBres(int xc, int yc, int r)
+{
+    int x = 0, y = r;
+    int d = 3 - 2 * r;
+    while (y >= x)
+    {
+        drawCircle(xc, yc, x, y);
+        x++;
+
+
+        if (d > 0)
+        {
+            y--;
+            d = d + 4 * (x - y) + 10;
+        }
+        else
+            d = d + 4 * x + 6;
+        drawCircle(xc, yc, x, y);
+        delay(50);
+    }
+}
+
+void boundaryFill4(int x,int y,int fillColor,int borderColor)
+{
+
+  if((getpixel(x,y) != borderColor) && (getpixel(x,y) != fillColor))
+  {
+    putpixel(x,y,fillColor);
+    boundaryFill4(x+1,y,fillColor,borderColor);
+    boundaryFill4(x-1,y,fillColor,borderColor);
+    boundaryFill4(x,y+1,fillColor,borderColor);
+    boundaryFill4(x,y-1,fillColor,borderColor);
+  }
+
+}
+
+int main()
+{
+    int xc, yc, r;
+    cout<<"\n Enter centre of circle(x,y):";
+    cin>>xc>>yc;
+    cout<<"\n Enter radius of circle:";
+    cin>>r;
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, NULL);
+    circleBres(xc, yc, r);
+    boundaryFill4(xc,yc,BLUE,RED);
+    delay(5000);
+    return 0;
+}
+
+
+Q4.  Implement mid point algorithm for drawing circle.
+Answer
+
+
+#include <iostream>
+#include <graphics.h>
+#include<math.h>
+using namespace std;
+
+void drawCircle(int xc, int yc, int x, int y)
+{
+
+    putpixel(xc+x, yc+y, RED);
+    putpixel(xc-x, yc+y, RED);
+    putpixel(xc+x, yc-y, RED);
+    putpixel(xc-x, yc-y, RED);
+    putpixel(xc+y, yc+x, RED);
+    putpixel(xc-y, yc+x, RED);
+    putpixel(xc+y, yc-x, RED);
+    putpixel(xc-y, yc-x, RED);
+
+
+}
+
+void circleBres(int xc, int yc, int r)
+{
+    int x = 0, y = r;
+    int d = 1 - r;
+    drawCircle(xc, yc, x, y);
+    while (y >x)
+    {
+
+        if (d < 0)
+        d = d + 2*x+3;
+        else
+        {  d = d + 2*(x-y)+ 5;
+          y=y-1;
+        }
+        x++;
+        drawCircle(xc, yc, x, y);
+        delay(50);
+      }
+    }
+
+int main()
+{
+    int xc , yc, r;
+    cout<<"\n Enter centre of circle(x,y):";
+    cin>>xc>>yc;
+    cout<<"\n Enter radius of circle:";
+    cin>>r;
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, NULL);
+    circleBres(xc, yc, r);
+    delay(5000);
+    return 0;
+}
+
+
+Q5.  Implement Mid point Algorithm for drawing ellipse.
+
+
+#include <iostream>
+#include <graphics.h>
+#include<math.h>
+using namespace std;
+
+void drawEllipse(int xc, int yc, int x, int y)
+{
+
+    putpixel(xc+x, yc+y, RED);
+    putpixel(xc-x, yc+y, RED);
+    putpixel(xc+x, yc-y, RED);
+    putpixel(xc-x, yc-y, RED);
+    // putpixel(xc+y, yc+x, RED);
+    // putpixel(xc-y, yc+x, RED);
+    // putpixel(xc+y, yc-x, RED);
+    // putpixel(xc-y, yc-x, RED);
+
+
+}
+
+void ellipseBres(int xc, int yc,int a,int b)
+{
+    int x = 0, y = b;
+    int d1 = b*b - a*a*b + 0.25*a*a;
+    drawEllipse(xc, yc, x, y);
+  //  while ((a*a)*(y-0.5) > (b*b)*(x+1))
+    while(b*b*x < a*a*y)
+    {
+        if (d1 < 0)
+        d1 = d1 + (b*b)*(2*x + 3);
+        else
+        {  d1 = d1 +(b*b)*(2*x + 3) + (a*a)*(-2*y+2);
+          y=y-1;
+        }
+        x++;
+        drawEllipse(xc, yc, x, y);
+        delay(50);
+      }
+
+      int d2 = (b*b)*(x+0.5)*(x+0.5) + (a*a)*(y-1)*(y-1) - a*a*b*b;
+      while(y>0)
+      {
+        if(d2<0)
+        {
+           d2 += (b*b)*(2*x+2) + (a*a)*(-2*y+3);
+           x+=1;
+        }
+        else
+        d2 += (a*a)*(3-2*y);
+
+        y-=1;
+        drawEllipse(xc,yc,x,y);
+        delay(50);
+      }
+    }
+
+int main()
+{
+    int xc,yc, a,b;
+    cout<<"\n Enter center point(x,y):";
+    cin>>xc>>yc;
+    cout<<"\n Enter semi-major axis(a) and semi-minor axis(b)";
+    cin>>a>>b;
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, NULL);
+    ellipseBres(xc, yc,a,b);
+    delay(10000);
+    return 0;
+}
+
+Q6. Using Bresenham Algorithm, draw pie chart.Fill pie chart using polyfill algorithm.
+Answer
+
+#include<iostream>
+#include<math.h>
+#include<graphics.h>
+using namespace std;
+
+void boundaryFill4(int x,int y,int fillColor,int borderColor)
+{
+
+  if((getpixel(x,y) != borderColor) && (getpixel(x,y) != fillColor))
+  {
+    putpixel(x,y,fillColor);
+    boundaryFill4(x+1,y,fillColor,borderColor);
+    boundaryFill4(x-1,y,fillColor,borderColor);
+    boundaryFill4(x,y+1,fillColor,borderColor);
+    boundaryFill4(x,y-1,fillColor,borderColor);
+  }
+
+}
+
+void drawline(int x0, int y0, int x1, int y1)
+{
+    int dx, dy, p, x, y;
+
+    dx=abs(x1-x0);
+    dy=abs(y1-y0);
+
+    x=x0;
+    y=y0;
+    float slope = dy/dx;
+    if(slope>1)
+    { //swap x0,y0
+      int temp =x0;
+      x0=y0;
+      y0=temp;
+      //swap x1,y1
+      temp=x1;
+      x1=y1;
+      y1=temp;
+    }
+
+    p=2*dy-dx;
+
+
+    for(int k=1;k<=dx;k++)
+    {
+      if(p<0)
+      {
+        if(x<x1)
+        x=x+1;
+        else
+        x-=1;
+        p+=2*dy;
+      }
+      else
+      {
+        if(y<y1)
+        y+=1;
+        else
+        y-=1;
+        if(x<x1)
+        x+=1;
+        else
+        x-=1;
+        p+=2*(dy-dx);
+
+      }
+
+      if(slope>1)
+      putpixel(y,x,WHITE);
+      else
+      putpixel(x,y,WHITE);
+      delay(50);
+    }
+}
+
+
+void drawCircle(int xc, int yc, int x, int y)
+{
+
+    putpixel(xc+x, yc+y,WHITE);
+    putpixel(xc-x, yc+y, WHITE);
+    putpixel(xc+x, yc-y,WHITE);
+    putpixel(xc-x, yc-y,WHITE);
+    putpixel(xc+y, yc+x,WHITE);
+    putpixel(xc-y, yc+x,WHITE);
+    putpixel(xc+y, yc-x,WHITE);
+    putpixel(xc-y, yc-x,WHITE);
+
+
+}
+
+void circleBres(int xc, int yc, int r)
+{
+    int x = 0, y = r;
+    int d = 1 - r;
+    drawCircle(xc, yc, x, y);
+    while (y >x)
+    {
+
+        if (d < 0)
+        d = d + 2*x+3;
+        else
+        {  d = d + 2*(x-y)+ 5;
+          y=y-1;
+        }
+        x++;
+        drawCircle(xc, yc, x, y);
+        delay(50);
+      }
+    }
+
+#define round(a)(int(a+0.5))
+int main()
+{
+double total=0.0,a=0.0;
+double x2,y2;
+int i,n;
+int gd=DETECT,gm;
+cout<<"PIE CHART"<<endl;
+cout<<"Enter the no. of regions"<<endl;
+cin>>n;
+double values[10];
+double per[10];
+double angle[10]={0,0,0,0,0,0,0,0,0,0};
+double b[10];
+cout<<"Enter the values of the regions"<<endl;
+
+for(i=0;i<n;i++)
+{
+cin>>values[i];
+total=total+values[i];
+}
+
+initgraph(&gd,&gm,NULL);
+circleBres(300,300,100);
+drawline(300,300,400,300);
+
+int x3,y3,fill=4;
+for(i=0;i<n;i++)
+{
+per[i]=((values[i]/total)*100);
+a=((per[i]/100)*360);
+if(i==0)
+b[i]=a;
+else
+b[i]=b[i-1]+a;
+angle[i]=(3.14*b[i])/180;
+ int ang=(3.14*(b[i]-10))/180;
+x2=(300+100*cos(angle[i]));
+y2=(300-100*sin(angle[i]));
+
+/*we are finding co ordinates of the point lying
+ in a  separated region of  pie chart so that we can
+  fill that region  with some specific color using polyfill algorithm*/
+x3=(300+50*cos(ang));
+y3=(300-50*sin(ang));
+
+drawline(300,300,round(x2),round(y2));
+boundaryFill4(x3,y3,fill,WHITE);
+fill++;
+}
+
+delay(10000);
+getch();
+closegraph();
+}
+
+Q7.Using Bresenham Algorithm draw Digital circuit for 2-1 multiplexer.
+Circuit is to be designed using NAND GATE.
+Answer
+
+#include <iostream>
+#include <graphics.h>
+
+using namespace std;
+
+void drawline(int x0, int y0, int x1, int y1)
+{
+    int dx, dy, p, x, y;
+
+    dx=abs(x1-x0);
+    dy=abs(y1-y0);
+
+    x=x0;
+    y=y0;
+    float slope = dy/dx;
+    if(slope>1)
+    { //swap x0,y0
+      int temp =x0;
+      x0=y0;
+      y0=temp;
+      //swap x1,y1
+      temp=x1;
+      x1=y1;
+      y1=temp;
+    }
+
+    p=2*dy-dx;
+
+
+    for(int k=1;k<=dx;k++)
+    {
+      if(p<0)
+      {
+        if(x<x1)
+        x=x+1;
+        else
+        x-=1;
+        p+=2*dy;
+      }
+      else
+      {
+        if(y<y1)
+        y+=1;
+        else
+        y-=1;
+        if(x<x1)
+        x+=1;
+        else
+        x-=1;
+        p+=2*(dy-dx);
+
+      }
+
+      if(slope>1)
+      putpixel(y,x,7);
+      else
+      putpixel(x,y,7);
+      delay(50);
+    }
+}
+
+void drawCircle(int xc, int yc, int x, int y)
+{
+
+    putpixel(xc+x, yc+y, RED);
+    putpixel(xc-x, yc+y, RED);
+    putpixel(xc+x, yc-y, RED);
+    putpixel(xc-x, yc-y, RED);
+    putpixel(xc+y, yc+x, RED);
+    putpixel(xc-y, yc+x, RED);
+    putpixel(xc+y, yc-x, RED);
+    putpixel(xc-y, yc-x, RED);
+
+
+}
+
+void circleBres(int xc, int yc, int r)
+{
+    int x = 0, y = r;
+    int d = 1 - r;
+    drawCircle(xc, yc, x, y);
+    while (y >x)
+    {
+
+        if (d < 0)
+        d = d + 2*x+3;
+        else
+        {  d = d + 2*(x-y)+ 5;
+          y=y-1;
+        }
+        x++;
+        drawCircle(xc, yc, x, y);
+      //  delay(50);
+      }
+    }
+
+    void boundaryFill4(int x,int y,int fillColor,int borderColor)
+    {
+
+      if((getpixel(x,y) != borderColor) && (getpixel(x,y) != fillColor))
+      {
+        putpixel(x,y,fillColor);
+        boundaryFill4(x+1,y,fillColor,borderColor);
+        boundaryFill4(x-1,y,fillColor,borderColor);
+        boundaryFill4(x,y+1,fillColor,borderColor);
+        boundaryFill4(x,y-1,fillColor,borderColor);
+      }
+
+    }
+
+void nandGate(int x,int y)
+{ setcolor(RED);
+  drawline(x,y,x+50,y);
+  drawline(x,y+50,x+50,y+50);
+  drawline(x,y,x,y+50);
+  drawline(x+50,y,x+50,y+50);
+  boundaryFill4(x+10,y+10,RED,RED);
+  circleBres(x+50,y+25,25);
+  boundaryFill4(x+60,y+40,RED,RED);
+  circleBres(x+78,y+26,3);
+  boundaryFill4(x+78,y+25,RED,RED);
+  setcolor(WHITE);
+}
+int main()
+{
+  int x=60,y=60;
+  cout<<"Enter signal values of INPUT ONE(B),INPUT TWO(C),SWITCH(A)  \n (the value of signal can be 0/1)";
+  int a,b,c,q=0;
+  cin>>a>>b>>c;
+
+  if(a==0)
+  {
+    if(b==1)
+    q=1;
+  }
+  else
+  {
+    if(c==1)
+    {
+      q=1;
+    }
+  }
+
+  int gd = DETECT, gm;
+  initgraph(&gd, &gm, NULL);
+  drawline(x,y,x+100,y);
+  drawline(x+20,y+30,x+100,y+30);
+  nandGate(x+100,y-10);
+
+  drawline(x+20,y+30,x+20,y+80);
+  drawline(x,y+80,x+50,y+80);
+  drawline(x+50,y+70,x+50,y+90);
+  drawline(x+50,y+70,x+100,y+70);
+  drawline(x+50,y+90,x+100,y+90);
+  nandGate(x+100,y+55);
+
+  drawline(x+181,y+15,x+350,y+15);
+  drawline(x+350,y+15,x+350,y+50);
+  drawline(x+350,y+50,x+400,y+50);
+  drawline(x+350,y+70,x+400,y+70);
+  nandGate(x+400,y+35);
+
+  drawline(x+181,y+80,x+200,y+80);
+  drawline(x+200,y+80,x+200,y+120);
+  drawline(x+200,y+120,x+220,y+120);
+  drawline(x,y+140,x+220,y+140);
+  nandGate(x+220,y+105);
+
+  drawline(x+301,y+130,x+350,y+130);
+  drawline(x+350,y+70,x+350,y+130);
+  drawline(x+481,y+60,x+500,y+60);
+
+  drawline(x,y+300,x+50,y+300);
+  deawline(x,y+350,x+50,y+350);
+  drawline(x+100,y+325,x+140,y+325);
+  drawline(x+50,y+350,x+100,y+325);
+  circleBres(x+50,y+350,3);
+  circleBres(x+100,y+325,3);
+  outtextxy(x-40,y+300,"B");
+  outtextxy(x-40,y+350,"C");
+  outtextxy(x+150,y+325,"Q");
+  outtextxy(x+75,y+340,"A");
+  outtextxy(x+50,y+400,"SWITCH ANALOGY");
+  char msg[128];
+
+  sprintf(msg,"B = %d",b);
+  outtextxy(x-40,y,msg);
+
+  sprintf(msg,"A = %d",a);
+  outtextxy(x-40,y+80,msg);
+
+  sprintf(msg,"C = %d",c);
+  outtextxy(x-40,y+140,msg);
+
+  sprintf(msg,"Q = %d",q);
+  outtextxy(x+510,y+60,msg);
+
+  //delay(10000);
+  getch();
+}
+
+
+Q8.Draw polygon of different shapes:
+1)convex
+2)Concave
+3)Triangle
+4)Square
+5)Rectangle
+6)Irregular shape
+Implement polyfill algorithm to fill these polygons.
+
+Answer
+
+#include <iostream>
+#include <graphics.h>
+
+using namespace std;
+
+void boundaryFill4(int x,int y,int fillColor,int borderColor)
+{
+
+  if((getpixel(x,y) != borderColor) && (getpixel(x,y) != fillColor))
+  {
+    putpixel(x,y,fillColor);
+    boundaryFill4(x+1,y,fillColor,borderColor);
+    boundaryFill4(x-1,y,fillColor,borderColor);
+    boundaryFill4(x,y+1,fillColor,borderColor);
+    boundaryFill4(x,y-1,fillColor,borderColor);
+  }
+
+}
+
+int main()
+{ int x=100,y=100,ans;
+  cout<<"Enter numbers to draw different shapes:\n1 for Square\n2 for Triangle";
+  cout<<"\n3 for Rectangle\n4 for Convex Polygon\n5 for Concave Polygon";
+  cout<<"\nAny number for irregular shape\n";
+  cin>>ans;
+  int gd = DETECT, gm;
+  initgraph(&gd, &gm, NULL);
+  if(ans ==1)
+  {
+  //square
+  drawline(x,y,x+50,y);
+  drawline(x,y,x,y+50);
+  drawline(x,y+50,x+50,y+50);
+  drawline(x+50,y,x+50,y+50);
+  boundaryFill4(x+10,y+10,RED,WHITE);
+  }
+  else if(ans == 2)
+  {
+ //triangle
+  drawline(x,y,x,y+50);
+  drawline(x,y+50,x+50,y+50);
+  drawline(x,y,x+50,y+50);
+  boundaryFill4(x+5,y+20,RED,WHITE);
+  }
+  else if(ans == 3)
+  {//rectangle
+  drawline(x,y,x+100,y);
+  draawline(x,y,x,y+50);
+  drawline(x,y+50,x+100,y+50);
+  drawline(x+100,y,x+100,y+50);
+  boundaryFill4(x+10,y+10,RED,WHITE);
+  }
+  else if(ans == 4)
+  {
+    // convex polygon(hexagon)
+    drawline(x,y,x,y+50);
+    drawline(x+100,y,x+100,y+50);
+    drawline(x,y,x+50,y-30);
+    drawline(x+100,y,x+50,y-30);
+    drawline(x,y+50,x+50,y+80);
+    drawline(x+100,y+50,x+50,y+80);
+    boundaryFill4(x+10,y+10,RED,WHITE);
+  }
+  else if(ans==5)
+  { //concave
+    drawline(x,y,x,y+50);
+    drawline(x+100,y,x+100,y+50);
+    drawline(x,y,x+20,y+40);
+    drawline(x+20,y+40,x+50,y-30);
+    drawline(x+100,y,x+50,y-30);
+    drawline(x,y+50,x+50,y+80);
+    drawline(x+50,y+80,x+50,y+25);
+    drawline(x+50,y+25,x+100,y+50);
+
+    boundaryFill4(x+90,y+10,RED,WHITE);
+
+  }
+  else
+  {
+    //irregular shapes
+    drawline(x,y,x+100,y-10);
+    drawline(x,y,x-20,y+50);
+    drawline(x+100,y-10,x+100,y+50);
+    drawline(x-20,y+50,x+50,y+80);
+    drawline(x+100,y+50,x+50,y+80);
+    boundaryFill4(x+10,y+10,RED,WHITE);
+
+  }
+  getch();
+  closegraph();
+}
